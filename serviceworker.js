@@ -94,6 +94,27 @@ self.addEventListener("fetch", (e) => {
 	if (e.request.url.includes("data/products.json")) {
 		e.respondWith(
 			(async function () {
+				await productStore.iterate((value) => {
+					data.products.push(value);
+				});
+				await characterStore.iterate((value) => {
+					data.characters.push(value);
+				});
+				await categorieStore.iterate((value) => {
+					data.categories.push(value);
+				});
+
+				if (
+					data.products.length &&
+					data.characters.length &&
+					data.categories.length
+				) {
+					// servework return a response
+					return new Response(JSON.stringify(data), {
+						header: { "Content-Type": "application/json" },
+					});
+				}
+
 				const response = await fetch(e.request);
 				let data = await response.clone().json();
 
