@@ -1,31 +1,43 @@
-const categories = document.querySelector('#categories')
-const characters = document.querySelector('#characters')
-const products = document.querySelector('main')
+const categories = document.querySelector("#categories");
+const characters = document.querySelector("#characters");
+const products = document.querySelector("main");
 
+const dbName = "store";
+const productStore = localforage.createInstance({
+	name: dbName,
+	storeName: "products",
+});
+const categorieStore = localforage.createInstance({
+	name: dbName,
+	storeName: "categories",
+});
+const characterStore = localforage.createInstance({
+	name: dbName,
+	storeName: "characters",
+});
 
-fetchData('data/products.json')
-.then(data => {
-    data.categories.forEach(category => {
-        categories.innerHTML += `<label>
+fetchData("data/products.json").then((data) => {
+	data.categories.forEach((category) => {
+		categories.innerHTML += `<label>
                         <input type="checkbox" checked data-cat="${category.id}">
                         ${category.name}
-                    </label>`
-    })
+                    </label>`;
+	});
 
-    data.characters.forEach(character => {
-        characters.innerHTML += `<label>
+	data.characters.forEach((character) => {
+		characters.innerHTML += `<label>
                         <input type="checkbox" checked data-char="${character.id}">
                         ${character.name}
-                    </label>`
-    })
+                    </label>`;
+	});
 
-    data.products.forEach(product => {
-        products.innerHTML += `<div class="product" data-cat="${product.cat}" data-char="${product.char}">
+	data.products.forEach((product) => {
+		products.innerHTML += `<div class="product" data-cat="${product.cat}" data-char="${product.char}">
             <img src="${product.image}">
             <h4>${product.title}</h4>
             <p>$${product.price}</p>
-        </div>`
-    })
+        </div>`;
+	});
 
-    applyFilters();
-})
+	applyFilters();
+});

@@ -2,7 +2,9 @@
   "name": "binaryVille",
   "version": "1.0.0",
   "description": "Improving performance with IndexedDB and caching",
-  "dependencies": {},
+  "dependencies": {
+    "localforage": "^1.10.0"
+  },
   "devDependencies": {
     "webpack": "^4.44.0",
     "webpack-cli": "^3.3.12",
