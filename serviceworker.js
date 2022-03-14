@@ -31,20 +31,17 @@ const cacheFiles = {
 }
 
 self.addEventListener("install", event => {
-
-    event.waitUntil(
-        Promise.all(
-            [
-                caches.open(currentCaches.css)
-                    .then(cache => {
-                        return cache.addAll(cacheFiles.css)
-                    }),
-                caches.open(currentCaches.imgs)
-                    .then(cache => {
-                        return cache.addAll(cacheFiles.imgs)
-                    })
-            ]
-        )
-    )
-
+	//Tells the installation to wait until this particular piece of code is finished
+	event.waitUntil(
+		Promise.all([
+            // open new cache
+			caches.open(currentCaches.css).then((cache) => {
+                // add more data at once
+				return cache.addAll(cacheFiles.css);
+			}),
+			caches.open(currentCaches.imgs).then((cache) => {
+				return cache.addAll(cacheFiles.imgs);
+			}),
+		])
+	);
 })
