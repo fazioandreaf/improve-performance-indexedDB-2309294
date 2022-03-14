@@ -1,3 +1,6 @@
+//  import lib for service worker
+importScripts("node_modules/localforage/dist/localforage.min.js");
+
 const cacheVersion = "0";
 
 const currentCaches = {
@@ -33,6 +36,21 @@ const cacheFiles = {
 		"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css",
 	],
 };
+
+//create a IndexDb with localforage
+const dbName = "store";
+const productStore = localforage.createInstance({
+	name: dbName,
+	storeName: "products",
+});
+const categorieStore = localforage.createInstance({
+	name: dbName,
+	storeName: "categories",
+});
+const characterStore = localforage.createInstance({
+	name: dbName,
+	storeName: "characters",
+});
 
 self.addEventListener("install", (event) => {
 	//Tells the installation to wait until this particular piece of code is finished
@@ -70,6 +88,35 @@ self.addEventListener("fetch", (e) => {
 					return fetch(e.request);
 				}
 			})
+		);
+	}
+
+	if (e.request.url.includes("data/products.json")) {
+		e.respondWith(
+			(async function () {
+				const response = await fetch(e.request);
+				let data = await response.clone().json();
+
+				if (data.products.length) {
+					data.products.forEach((elem, key) => {
+						productStore.setItem(String(key), elem);
+					});
+				}
+
+				if (data.characters.length) {
+					data.characters.forEach((elem, key) => {
+						characterStore.setItem(String(key), elem);
+					});
+				}
+
+				if (data.categories.length) {
+					data.categories.forEach((elem, key) => {
+						categorieStore.setItem(String(key), elem);
+					});
+				}
+
+				return response;
+			})()
 		);
 	}
 });

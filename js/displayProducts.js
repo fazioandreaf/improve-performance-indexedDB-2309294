@@ -2,20 +2,6 @@ const categories = document.querySelector("#categories");
 const characters = document.querySelector("#characters");
 const products = document.querySelector("main");
 
-const dbName = "store";
-const productStore = localforage.createInstance({
-	name: dbName,
-	storeName: "products",
-});
-const categorieStore = localforage.createInstance({
-	name: dbName,
-	storeName: "categories",
-});
-const characterStore = localforage.createInstance({
-	name: dbName,
-	storeName: "characters",
-});
-
 fetchData("data/products.json").then((data) => {
 	data.categories.forEach((category) => {
 		categories.innerHTML += `<label>

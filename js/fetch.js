@@ -1,27 +1,35 @@
 async function fetchData(url) {
 	const response = await fetch(url);
-	const data = await response.json();
-
-	if (data.products.length) {
-		data.products.forEach((elem, key) => {
-			productStore.setItem(String(key), elem);
-		});
-	}
-
-	if (data.characters.length) {
-		data.characters.forEach((elem, key) => {
-			characterStore.setItem(String(key), elem);
-		});
-	}
-
-	if (data.categories.length) {
-		data.categories.forEach((elem, key) => {
-			categorieStore.setItem(String(key), elem);
-		});
-	}
-
+	let data = await response.json();
 	return data;
 }
+
+// async function fetchData(url) {
+// 	const response = await fetch(url);
+// 	let data = { product: [], categories: [], characters: [] };
+
+// 	await productStore.iterate((value) => {
+// 		data.products.push(value);
+// 	});
+// 	await characterStore.iterate((value) => {
+// 		data.characters.push(value);
+// 	});
+// 	await categorieStore.iterate((value) => {
+// 		data.categories.push(value);
+// 	});
+
+// 	if (
+// 		data.products.length &&
+// 		data.characters.length &&
+// 		data.categories.length
+// 	) {
+// 		return data;
+// 	}
+
+// 	data = await response.json();
+
+// 	return data;
+// }
 
 // // network first
 // async function APIFetchData(url) {
