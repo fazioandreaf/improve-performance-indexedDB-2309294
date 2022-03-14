@@ -1,14 +1,15 @@
+const cacheVersion = "0";
+
 const currentCaches = {
-	css: "CSS",
-	imgs: "images",
+	css: "CSS-" + cacheVersion + ".2",
+	imgs: "images-" + cacheVersion + ".1",
+	perm: "perm-" + cacheVersion + ".1",
 };
 
+const cachesToDelete = ["CSS", "images", "CSS-0.1"];
+
 const cacheFiles = {
-	css: [
-		"https://fonts.googleapis.com/css?family=Roboto:400,500,700",
-		"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css",
-		"http://localhost:8080/css/style.css",
-	],
+	css: ["http://localhost:8080/css/style.css"],
 	imgs: [
 		"http://localhost:8080/imgs/logo.svg",
 		"http://localhost:8080/imgs/product-montage.png",
@@ -27,6 +28,10 @@ const cacheFiles = {
 		"http://localhost:8080/imgs/spring-disc.png",
 		"http://localhost:8080/imgs/header.png",
 	],
+	perm: [
+		"https://fonts.googleapis.com/css?family=Roboto:400,500,700",
+		"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css",
+	],
 };
 
 self.addEventListener("install", (event) => {
@@ -41,16 +46,25 @@ self.addEventListener("install", (event) => {
 			caches.open(currentCaches.imgs).then((cache) => {
 				return cache.addAll(cacheFiles.imgs);
 			}),
+			caches.open(currentCaches.perm).then((cache) => {
+				return cache.addAll(cacheFiles.perm);
+			}),
+			...cachesToDelete.map((cache) => {
+				return caches.delete(cache);
+			}),
 		])
 	);
 });
 
 self.addEventListener("fetch", (e) => {
-	if ([...cacheFiles.css, ...cacheFiles.imgs].includes(e.request.url)) {
+	if (
+		[...cacheFiles.css, ...cacheFiles.imgs, ...cacheFiles.perm].includes(
+			e.request.url
+		)
+	) {
 		e.respondWith(
 			caches.match(e.request).then((res) => {
 				if (res) {
-					console.log("returnin file from cache");
 					return res;
 				} else {
 					return fetch(e.request);
